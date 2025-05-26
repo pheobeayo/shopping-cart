@@ -1,9 +1,3 @@
-import React, { useEffect, useState } from 'react';
-import ProductCard from '../components/ProductCard';
-import Cart from '../components/Cart';
-
-
-
 const products = [
   { 
     id: 1, 
@@ -106,50 +100,3 @@ const products = [
     description: '27-inch 4K IPS monitor with HDR support'
   },
 ];
-
-const Home = () => {
-  const [cart, setCart] = useState(() => {
-    const stored = localStorage.getItem('cart');
-    return stored ? JSON.parse(stored) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart]);
-
-  const addToCart = (product) => {
-    setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
-      if (existing) {
-        return prev.map(item =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
-  };
-
-  const updateCart = (id, qty) => {
-    setCart(prev =>
-      prev.map(item => (item.id === id ? { ...item, quantity: qty } : item))
-    );
-  };
-
-  const removeItem = (id) => {
-    setCart(prev => prev.filter(item => item.id !== id));
-  };
-
-  return (
-    <div>
-      <h1>Shopping Cart</h1>
-      <div className="product-grid">
-        {products.map(product => (
-          <ProductCard key={product.id} product={product} addToCart={addToCart} />
-        ))}
-      </div>
-      <Cart cart={cart} updateCart={updateCart} removeItem={removeItem} />
-    </div>
-  );
-};
-
-export default Home;
